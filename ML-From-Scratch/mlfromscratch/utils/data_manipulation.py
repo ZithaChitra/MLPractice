@@ -62,9 +62,63 @@ def polynomial_features(X, degree):
 	return X_new
 
 
-	def get_random_subset(X, y):
-		
 
+def get_random_subset(X, y, n_subsets, replacements=True):
+	""" Return random subsets (with replacements) of the data """
+	n_samples = np.shape(X)[0]
+	# Concatenate x and y and do a random shuffle
+	X_y = np.concatenate((X, y.reshape((1, len(y))).T), axis=1)
+	subsets = []
+
+	# Uses 50 % of training samples without replacements
+	subsample_size = int(n_samples // 2)
+	if replacements:
+		subsample_size = n_samples # 100% with replacements
+
+	for _ in range(n_subsets):
+		idx = np.random.choice(
+			range(n_samples),
+			size=np.shape(range(subsample_size)),
+			replace=replacements
+		)
+	
+
+		X = X_y[idx][:, :-1]
+		y = X_y[idx][:, -1]
+		subsets.append([X, y])
+
+		return subsets
+
+
+def standardize(X):
+	""" Standardize the dataset X """
+	X_std = X
+	mean = X.mean(axis=0)
+	std = X.std(axis=0)
+	for col in range(np.shape(X)[1]):
+		if std[col]:
+			X_std[:, col] = (X_std[:col] - mean[col])/std[col]
+	return X_std
+
+
+def normalize(X, axis=-1, order=2):
+	""" Normailze the dataset """
+	l2 = np.atleast_1d(np.linalg.norm(X, order, axis))
+	l2[l2 == 0] = 1
+	return X / np.expand_dims(l2, axis)
+
+
+
+def train_test_split(X, y, test_size=0.5, shuffle=True, seed=None):
+	""" Split the data into train and test sets """
+	if shuffle:
+		X, y = shuffle_data(X, y, seed)
+	# Split the data in the ratio specified in test_size
+	split_i = len(y) - int(len(y) // (1 / test-size))
+	X_train, X_test = X[:split_i], X[split_i:]
+	y_train, y_test = y[:split_i], y[split_i:]
+
+	return X_train, X_test, y_train< y_test
 
 
 
