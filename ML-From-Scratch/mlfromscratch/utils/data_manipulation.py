@@ -114,7 +114,7 @@ def train_test_split(X, y, test_size=0.5, shuffle=True, seed=None):
 	if shuffle:
 		X, y = shuffle_data(X, y, seed)
 	# Split the data in the ratio specified in test_size
-	split_i = len(y) - int(len(y) // (1 / test-size))
+	split_i = len(y) - int(len(y) // (1 / test_size))
 	X_train, X_test = X[:split_i], X[split_i:]
 	y_train, y_test = y[:split_i], y[split_i:]
 
@@ -157,9 +157,9 @@ def to_categorical(x, n_col=None):
 	""" One hot encoding of nominal values """
 	if not n_col:
 		n_col = np.amax(x) + 1
-		one_hot = np.zeros((x.shape[0], n_col))
-    one_hot[np.arange(x.shape[0]), x] = 1
-    return one_hot
+	one_hot = np.zeros((x.shape[0], n_col))
+	one_hot[np.arange(x.shape[0]), x] = 1
+	return one_hot
 
 
 def to_nominal(x):
