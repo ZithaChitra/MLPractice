@@ -137,6 +137,84 @@ class LinearRegression(Regression):
 		
 
 
+# ---------------------------------------------------
+# +++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+class LassoRegression(Regression):
+	"""
+	Linear Regerssion model with regularizaton factor which does both
+	variable selection and regularization. Model that tries to
+	balance the fit of the model with respect to the training data
+	and complexity of the model. 
+	Parameters:
+	----------
+	degree: int
+		The degree of the polynomial that the independent variable X
+		will be transformed to.
+	reg_factor: float
+		Value of lambda in the regularization term.
+	num_iterations: float
+		The number of iterations the algorithm will tune weights for.
+	learning_rate: float
+		The step length that will be used when updating weights
+	"""
+	def __init__(self, degree: int, reg_factor: float, n_iterations:float, learning_rate: float):
+		self.degree = degree
+		self.regularization = l1_regularization(alpha=reg_factor)
+		super(LassoRegression, self).__init__(n_iterations, learning_rate)
+
+	
+	def fit(self, X, y):
+		X = normalize(polynomial_features(X, degree=self.degree))
+		return super(LassoRegression, self).predict(X)
+
+	def predict(self, X):
+		X = normalize(polynomial_features(X, degree=self.degree))
+		return super(LassoRegression, self).predict(X)
+
+
+
+# ---------------------------------------------------
+# +++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+class PolynomialRegression(Regression):
+	"""
+	Performs a non-linear transformation of the data before fitting
+	the model and doing predictions, which allows for non-linear
+	regression.
+	Parameters:
+	----------
+	degree: int
+		The degree of the polynomial that the independent variable X
+		will be transformed to.
+	n_iterations: float
+		The number of iterations the algorithm will tune weights for.
+	learning_rate: float
+		The step length that will be used when updating weights.
+	"""
+	def __init__(self, degree: float, n_iterations: float=3000, learning_rate: float=0.001):
+		self.degree = degree
+		# no regularization
+		self.regularization = lambda x: 0
+		self.regularization.grad = lambda x: 0
+		super(PolynomialRegression, self).__init__(n_iterations=n_iterations, learning_rate=learning_rate)
+
+
+	def fit(self, X, y):
+		X = polynomial_features(X, degree=self.degree)
+		super(PolynomialRegression, self).fit(X, y)
+
+
+	def predict(self, X):
+		X = polynomial_features(X, degree=self.degree)
+		return super(PolynomialRegression, self).predict(X)
+
+
+
+
+
 
 
 
