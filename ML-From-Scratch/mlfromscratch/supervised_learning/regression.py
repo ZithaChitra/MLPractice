@@ -212,6 +212,112 @@ class PolynomialRegression(Regression):
 		return super(PolynomialRegression, self).predict(X)
 
 
+# ---------------------------------------------------
+# +++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+class RidgeRegression(Regression):
+	"""
+	Also referred to as Tikhonov regularization.
+	Linear regression model with a regularization term/factor. 
+	Model that tries to balance the fit of the model with respect to
+	the training data and the complexity of the model.
+	Parameters:
+	----------
+	reg_fatcor: float
+		The fatcor that will determine the amount of regularization 
+		feature shrinkage.
+	n_iterations: float
+		The number of iterations the algorithm will tune weights for.
+	learning_rate: float
+		The step lenght that wil be used when updating the weights.
+	"""
+	def __init__(self, reg_factor: float, n_iterations=1000, learning_rate: float=0.001):
+		self.regularization = l2_regularization(alpha=reg_factor)
+		super(RidgeRegression, self).__init__(n_iterations, learning_rate)
+
+
+
+
+# ---------------------------------------------------
+# +++++++++++++++++++++++++++++++++++++++++++++++++++
+
+	
+class PolynomialRidgeregression(Regression):
+	"""
+	Similar to regular ridge regression except that the data is
+	transformed to allow for polynomial regression.
+	Parameters:
+	----------
+	degree: int
+		The degree of the polynomial that the independent variable X
+		will be transformed to.
+	reg_factor: float
+		The factor that will determine the amount of regularization
+		and feature shrinkage.
+	n_iterations: float
+		The number of iterations the algorith will tune weights for.
+	learing_rate: float
+		The step length that will be used when updating the weights. 
+	"""
+	def __init__(self, degree: int, reg_factor: float, n_iterations: float=3000, learning_rate: float=0.01, gradient_desceent: bool=True):
+		self.degree = degree
+		self.regularization = l2_regularization(alpha=reg_factor)
+		super(PolynomialRidgeregression, self).__init__(n_iterations=n_iterations, learning_rate=learning_rate)
+
+
+	def fit(self, X, y):
+		X = normalize(polynomial_features(X, degree=self.degree))
+		super(PolynomialRidgeregression, self).fit(X)
+
+	def predict(self, X):
+		X = normalize(polynomial_features(X, degree=self.degree))
+		return super(PolynomialRidgeregression, self).predict(X)
+
+
+	
+class ElasticNet(Regression):
+	"""
+	Regression where a combiantion of l1 and l2 regularization are 
+	used.
+	The ration of their contributions are set with the "l1_ratio"
+	parameter.
+	Parameters:
+	----------
+	degree: int
+		The degree of the polynomial that the independent variable X
+		will transformed to.
+	reg_factor: float
+		The factor that will determine the amount of regularization
+		and feature shrinkage.
+	l1_ratio: float
+		weighs the contribution of l1 and l2 regularization.
+	n_iterations: float
+		The step leangth that will be used when updating the weights.
+	"""
+	def __init__(self, degree: int=1, reg_factor:float=0.05, l1_ratio: float=0.5, n_iterations: float=3000, learning_rate: float=0.01):
+		self.degree = degree
+		self.regularization = l1_l2_regularization(alpha=reg_factor, l1_ratio=l1_ratio)
+		super(ElasticNet, self).__init__(n_iterations, learning_rate)
+
+	def fit(self, X, y):
+		X = normalize(polynomial_features(X, degree=self.degree))
+		super(ElasticNet, self).fit(X, y)
+
+
+	def predict(self, X):
+		X = normalize(polynomial_features(X, degree=self.degree))
+		return super(ElasticNet, self).predict(X)
+
+
+
+
+
+		
+
+
+
+
 
 
 
