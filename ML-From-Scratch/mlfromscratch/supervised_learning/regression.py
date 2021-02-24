@@ -111,7 +111,8 @@ class LinearRegression(Regression):
 	learning_rate: float
 		The step length that will be used when updating weights.
 	gradient: boolean
-		True or False depending if gradient descent should be used when training. if false then we use batch optimization by least squares.
+		True or False depending if gradient descent should be used when training.
+		 if false then we use batch optimization by least squares.
 	"""
 	def __init__(self, n_iterations=100, learning_rate=0.001, gradient_descent=True):
 		self.gradient_descent = gradient_descent
